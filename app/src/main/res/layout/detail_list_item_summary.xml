@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/summary"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="8dp"
+    android:textAppearance="?textAppearanceBody1"
+    app:layout_constraintBottom_toBottomOf="@+id/coverImage"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/coverImage"
+    app:layout_constraintTop_toTopOf="@+id/coverImage"
+    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu enim at velit rutrum molestie ac non est. Curabitur rhoncus eget erat quis consequat. Curabitur sodales, tortor at tempor tristique, nulla lorem tincidunt dolor, ut hendrerit leo sapien vel mi. Maecenas suscipit tempor leo ac ultricies. Phasellus at tincidunt sem. Sed placerat eleifend elementum. Aenean gravida aliquam est pharetra pretium. In hac habitasse platea dictumst. Aenean accumsan scelerisque odio, sit amet rhoncus ligula vulputate et." />

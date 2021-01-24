@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">IGDB</string>
+    <string name="highly_rated_games">Highly Rated</string>
+    <string name="similar_games">Similar Games</string>
+    <string name="genres">Genres</string>
+    <string name="summary">Summary</string>
+    <string name="sweat_emoji">&#128517;</string>
+    <string name="thinking_emoji">&#129300;</string>
+    <string name="we_have_nothing_to_show_you">We have nothing to show you</string>
+    <string name="you_are_unauthorized">You are UnAuthorized…</string>
+</resources>

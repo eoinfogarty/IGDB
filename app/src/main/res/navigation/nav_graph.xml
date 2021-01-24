@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="ie.redstar.igdb.ui.main.MainFragment"
+        tools:layout="@layout/main_fragment"/>
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="ie.redstar.igdb.ui.detail.DetailFragment"
+        tools:layout="@layout/detail_fragment" >
+
+        <argument
+            android:name="gameId"
+            app:argType="integer" />
+
+        <argument
+            android:name="label"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/global_to_detailFragment"
+        app:destination="@id/detailFragment"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_open_exit"
+        app:popEnterAnim="@anim/fragment_close_enter"
+        app:popExitAnim="@anim/fragment_close_exit" />
+</navigation>
