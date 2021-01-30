@@ -1,6 +1,9 @@
 package ie.redstar.igdb.data.repository
 
 import android.util.Log
+import com.api.igdb.apicalypse.APICalypse
+import com.api.igdb.apicalypse.Sort
+import com.api.igdb.exceptions.RequestException
 import ie.redstar.igdb.data.local.GameListDao
 import ie.redstar.igdb.data.model.GameListModel
 import ie.redstar.igdb.data.remote.IgdbApi
@@ -9,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 interface GameListRepository {
@@ -34,8 +36,17 @@ class GameListDataSource(
 ) : GameListRepository {
 
     override fun getGamesList(offset: Int) = flow<GameListResult> {
+        val query = APICalypse()
+            .fields("name, first_release_date, cover.image_id, rating, rating_count")
+            .limit(30)
+            .offset(offset)
+            .where("rating_count > 50")
+            .sort("rating", Sort.DESCENDING)
+            .buildQuery()
+            .toRequestBody("text/plain".toMediaType())
+
         val result = try {
-            val games = igdbApi.getVideoGames(getQueryString(offset))
+            val games = igdbApi.getVideoGames(query)
             if (offset == 0) {
                 gameListDao.deleteAll()
             }
@@ -43,7 +54,7 @@ class GameListDataSource(
 
             val cachedGames = gameListDao.getGamesList()
             GameListResult.Success(cachedGames)
-        } catch (e: Exception) {
+        } catch (e: RequestException) {
             Log.e(this::class.simpleName, "Error  :$e")
             val cachedGames = gameListDao.getGamesList()
             GameListResult.Error(e, cachedGames)
@@ -51,11 +62,4 @@ class GameListDataSource(
 
         emit(result)
     }.flowOn(Dispatchers.IO)
-
-    private fun getQueryString(offset: Int): RequestBody {
-        // todo add a query generator :\
-        val query =
-            "fields name, first_release_date, cover.image_id, rating, rating_count; limit 30; offset $offset; where rating_count > 50; sort rating desc;"
-        return query.toRequestBody("text/plain".toMediaType())
-    }
 }

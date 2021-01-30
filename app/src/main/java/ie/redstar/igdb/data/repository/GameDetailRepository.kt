@@ -1,6 +1,7 @@
 package ie.redstar.igdb.data.repository
 
 import android.util.Log
+import com.api.igdb.apicalypse.APICalypse
 import ie.redstar.igdb.data.local.GameDetailDao
 import ie.redstar.igdb.data.model.GameDetailModel
 import ie.redstar.igdb.data.remote.IgdbApi
@@ -9,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 interface GameDetailRepository {
@@ -34,8 +34,14 @@ class GameDetailDataSource(
 ) : GameDetailRepository {
 
     override fun getGameDetails(id: Int) = flow<GameDetailResult> {
+        val query = APICalypse()
+            .fields("name, first_release_date, rating, summary, storyline, cover.image_id, genres.name, screenshots.image_id, similar_games.name, similar_games.cover.image_id, similar_games.first_release_date")
+            .where("id = $id")
+            .buildQuery()
+            .toRequestBody("text/plain".toMediaType())
+
         val result = try {
-            val gameDetail = igdbApi.getVideoGameDetail(getQueryString(id)).first()
+            val gameDetail = igdbApi.getVideoGameDetail(query).first()
             gameDetailDao.insert(gameDetail)
 
             val cachedGame = gameDetailDao.getGamesDetail(id)
@@ -48,11 +54,4 @@ class GameDetailDataSource(
 
         emit(result)
     }.flowOn(Dispatchers.IO)
-
-    private fun getQueryString(id: Int): RequestBody {
-        // todo add a query generator :\
-        val query =
-            "fields name, first_release_date, rating, summary, storyline, cover.image_id, genres.name, screenshots.image_id, similar_games.name, similar_games.cover.image_id, similar_games.first_release_date; where id = $id;"
-        return query.toRequestBody("text/plain".toMediaType())
-    }
 }
